@@ -21,7 +21,7 @@ public class SensorController {
     private SensorService service;
 
     @PostMapping
-    public ResponseEntity<OutputSensor> save(@RequestBody CreateSensor createSensor){
+    public ResponseEntity<OutputSensor> create(@RequestBody CreateSensor createSensor){
         OutputSensor outputSensor = service.create(createSensor);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(outputSensor.id()).toUri();
         return ResponseEntity.created(location).body(outputSensor);
@@ -42,7 +42,7 @@ public class SensorController {
         return service.update(updateSensor);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.noContent().build();

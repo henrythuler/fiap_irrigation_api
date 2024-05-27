@@ -2,6 +2,7 @@ package br.com.fiap.irrigationapi.modules.sensors.services;
 
 import br.com.fiap.irrigationapi.exceptions.DatabaseException;
 import br.com.fiap.irrigationapi.exceptions.NotFoundException;
+import br.com.fiap.irrigationapi.modules.areas.repositories.AreaRepository;
 import br.com.fiap.irrigationapi.modules.sensors.dtos.CreateSensor;
 import br.com.fiap.irrigationapi.modules.sensors.dtos.OutputSensor;
 import br.com.fiap.irrigationapi.modules.sensors.dtos.UpdateSensor;
@@ -21,9 +22,13 @@ public class SensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
+    @Autowired
+    private AreaRepository areaRepository;
+
     public OutputSensor create(CreateSensor createSensor){
         Sensor sensor = new Sensor();
         BeanUtils.copyProperties(createSensor, sensor);
+        sensor.setArea(areaRepository.getReferenceById(createSensor.areaId()));
         sensor = sensorRepository.save(sensor);
         return new OutputSensor(sensor);
     }
@@ -40,6 +45,7 @@ public class SensorService {
         try{
             Sensor foundSensor = sensorRepository.getReferenceById(updateSensor.id());
             BeanUtils.copyProperties(updateSensor, foundSensor);
+            foundSensor.setArea(areaRepository.getReferenceById(updateSensor.areaId()));
             return new OutputSensor(sensorRepository.save(foundSensor));
         }catch (EntityNotFoundException e){
             throw new NotFoundException("Sensor", updateSensor.id());

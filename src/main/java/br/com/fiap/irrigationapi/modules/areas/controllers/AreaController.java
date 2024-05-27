@@ -42,7 +42,7 @@ public class AreaController {
         return ResponseEntity.ok(service.update(area));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

@@ -1,10 +1,9 @@
-package br.com.fiap.irrigationapi.modules.schedule.models;
+package br.com.fiap.irrigationapi.modules.schedules.models;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity

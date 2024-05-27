@@ -6,6 +6,9 @@ import br.com.fiap.irrigationapi.modules.notifications.dtos.OutputNotification;
 import br.com.fiap.irrigationapi.modules.notifications.dtos.UpdateNotification;
 import br.com.fiap.irrigationapi.modules.notifications.models.Notification;
 import br.com.fiap.irrigationapi.modules.notifications.repositories.NotificationRepository;
+import br.com.fiap.irrigationapi.modules.sensors.repositories.SensorRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,20 +22,26 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private SensorRepository sensorRepository;
+
     public OutputNotification create(CreateNotification createNotification) {
         var notification = new Notification();
-        notification.setDescription(createNotification.getDescription());
-        notification.setTimestamp(createNotification.getTimestamp());
-
-        return new OutputNotification(notificationRepository.save(notification));
+        BeanUtils.copyProperties(createNotification, notification);
+        notification.setSensor(sensorRepository.getReferenceById(createNotification.sensorId()));
+        notification = notificationRepository.save(notification);
+        return new OutputNotification(notification);
     }
 
     public OutputNotification update(UpdateNotification updateNotification) {
-        Notification notification = findById(updateNotification.getId());
-        notification.setDescription(updateNotification.getDescription());
-        notification.setTimestamp(updateNotification.getTimestamp());
-
-        return new OutputNotification(notificationRepository.save(notification));
+        try {
+            var foundNotification = notificationRepository.getReferenceById(updateNotification.id());
+            BeanUtils.copyProperties(updateNotification, foundNotification);
+            foundNotification.setSensor(sensorRepository.getReferenceById(updateNotification.sensorId()));
+            return new OutputNotification(notificationRepository.save(foundNotification));
+        }catch (EntityNotFoundException e){
+            throw new NotFoundException("Notification", updateNotification.id());
+        }
     }
 
     public Notification findById(Long id) {
@@ -44,9 +53,10 @@ public class NotificationService {
         }
     }
 
-    public Page<Notification> findAll(Pageable pageable) {
-        return notificationRepository.findAll(pageable);
+    public Page<OutputNotification> findAll(Pageable pageable) {
+        return notificationRepository.findAll(pageable).map(OutputNotification::new);
     }
+
 
     public void deleteById(Long id) {
         notificationRepository.deleteById(id);

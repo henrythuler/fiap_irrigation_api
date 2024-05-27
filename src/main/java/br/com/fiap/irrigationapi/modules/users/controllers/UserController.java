@@ -50,14 +50,14 @@ public class UserController {
 
     @PutMapping("/activate/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity activateUser(@PathVariable Long id) {
+    public ResponseEntity activate(@PathVariable Long id) {
         var user = service.activate(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/deactivate/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity deactivateUser(@PathVariable Long id) {
+    public ResponseEntity deactivate(@PathVariable Long id) {
         var user = service.deactivate(id);
         return ResponseEntity.ok(user);
     }

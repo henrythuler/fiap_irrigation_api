@@ -1,6 +1,5 @@
 package br.com.fiap.irrigationapi.modules.sensors.dtos;
 
-import br.com.fiap.irrigationapi.modules.areas.models.Area;
 import br.com.fiap.irrigationapi.modules.notifications.models.Notification;
 import br.com.fiap.irrigationapi.modules.sensors.models.Sensor;
 import br.com.fiap.irrigationapi.modules.weathers.models.Weather;
@@ -11,7 +10,7 @@ public record OutputSensor(
         Long id,
         String type,
         String location,
-        Area area,
+        Long areaId,
         List<Weather> weathers,
         List<Notification> notifications
 ) {
@@ -21,7 +20,7 @@ public record OutputSensor(
             sensor.getId(),
             sensor.getType(),
             sensor.getLocation(),
-            sensor.getArea(),
+            sensor.getArea().getId(),
             sensor.getWeathers(),
             sensor.getNotifications()
         );

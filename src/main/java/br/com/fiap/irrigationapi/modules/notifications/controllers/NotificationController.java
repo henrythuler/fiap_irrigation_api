@@ -24,20 +24,20 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<OutputNotification> create(@RequestBody @Valid CreateNotification createNotification) {
         OutputNotification outputNotification = service.create(createNotification);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(outputNotification.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(outputNotification.id()).toUri();
         return ResponseEntity.created(location).body(outputNotification);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<OutputNotification> getById(@PathVariable Long id) {
         return ResponseEntity.ok(new OutputNotification(service.findById(id)));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<OutputNotification>> getAll(Pageable pageable) {
-        Page<OutputNotification> notifications = service.findAll(pageable).map(OutputNotification::new);
-        return ResponseEntity.ok(notifications);
+    public Page<OutputNotification> getAll(Pageable pageable){
+        return service.findAll(pageable);
     }
+
 
     @PutMapping
     public ResponseEntity<OutputNotification> update(@RequestBody @Valid UpdateNotification updateNotification) {

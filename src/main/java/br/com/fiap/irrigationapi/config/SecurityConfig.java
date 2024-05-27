@@ -40,10 +40,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/areas/delete/").hasRole("ADMIN")
 
                         // NOTIFICATIONS
-                        // TO DO: IMPLEMENTS
+                        .requestMatchers(HttpMethod.POST, "/api/notifications").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/notifications").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/notifications/all").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/notifications/id/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/notifications/delete/").hasRole("ADMIN")
 
                         // SCHEDULES
-                        // TO DO: IMPLEMENTS
+                        .requestMatchers(HttpMethod.POST, "/api/schedules").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/schedules").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/schedules/all").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/schedules/id/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/schedules/delete/").hasRole("ADMIN")
 
                         // SENSORS
                         .requestMatchers(HttpMethod.POST, "/api/sensors").hasRole("ADMIN")
@@ -65,7 +73,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users/all").hasRole("ADMIN")
 
                         // WEATHERS
-                        // TO DO: IMPLEMENTS
+                        .requestMatchers(HttpMethod.POST, "/api/weathers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/weathers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/weathers/all").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/weathers/id/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/weathers/").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

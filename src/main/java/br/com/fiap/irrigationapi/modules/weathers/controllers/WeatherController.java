@@ -1,5 +1,8 @@
 package br.com.fiap.irrigationapi.modules.weathers.controllers;
 
+import br.com.fiap.irrigationapi.modules.weathers.dtos.CreateWeather;
+import br.com.fiap.irrigationapi.modules.weathers.dtos.OutputWeather;
+import br.com.fiap.irrigationapi.modules.weathers.dtos.UpdateWeather;
 import br.com.fiap.irrigationapi.modules.weathers.models.Weather;
 import br.com.fiap.irrigationapi.modules.weathers.services.WeatherService;
 import jakarta.validation.Valid;
@@ -9,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.Optional;
 
@@ -20,13 +22,13 @@ public class WeatherController {
     @Autowired
     private WeatherService service;
     @PostMapping
-    public ResponseEntity<Weather> create(@RequestBody @Valid Weather weather) {
-        Weather savedWeather = service.save(weather);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedWeather.getId()).toUri();
+    public ResponseEntity<OutputWeather> create(@RequestBody @Valid CreateWeather weather) {
+        OutputWeather savedWeather = service.create(weather);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedWeather.id()).toUri();
         return ResponseEntity.created(location).body(savedWeather);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Weather> getById(@PathVariable Long id) {
         Optional<Weather> weather = service.findById(id);
         return weather.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
@@ -38,20 +40,13 @@ public class WeatherController {
         return ResponseEntity.ok(weathers);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Weather> update(@PathVariable Long id, @RequestBody @Valid Weather weather) {
-        if (!service.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        weather.setId(id);
-        return ResponseEntity.ok(service.update(weather));
+    @PutMapping
+    public OutputWeather update(@RequestBody @Valid UpdateWeather weather) {
+        return service.update(weather);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!service.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
